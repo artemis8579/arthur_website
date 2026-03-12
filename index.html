@@ -1,25 +1,483 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Arthur Website</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header>
-        <h1>testing...</h1>
-        <p>beep boop</p>
-        <a href="#about" class="button">hyperlink test</a>
-    </header>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arthurian Tales through the Years</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #0f172a;
+            --accent-color: #fbbf24;
+            --secondary-color: #38bdf8;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(30, 41, 59, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
 
-    <section id="about">
-        <h2></h2>
-        <p></p>
-        <img src="https://via.placeholder.com/300" alt="">
-    </section>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Lora', serif;
+            background: linear-gradient(135deg, #020617 0%, #1e1b4b 50%, #0f172a 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            line-height: 1.6;
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        .nav-btn,
+        .source-heading {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* NAVIGATION - Glassmorphism */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 0;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 2px solid transparent;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-main);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dropdown:hover .nav-btn,
+        .nav-btn:hover {
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            min-width: 240px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .dropdown-content button {
+            background: transparent;
+            border: none;
+            width: 100%;
+            padding: 15px 20px;
+            text-align: left;
+            font-family: 'Lora', serif;
+            font-size: 15px;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, padding-left 0.2s;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dropdown-content button:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content button:hover {
+            background: rgba(251, 191, 36, 0.15);
+            color: var(--accent-color);
+            padding-left: 25px;
+        }
+
+        /* MAIN CONTENT AREA */
+        main {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* CARDS / CONTAINERS */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Decorative top accent on cards */
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--accent-color), var(--secondary-color), transparent);
+        }
+
+        h1,
+        h2 {
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2rem;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #cbd5e1;
+        }
+
+        .source-box {
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 4px solid var(--secondary-color);
+            padding: 15px 20px;
+            margin-top: 30px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .source-heading {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .source-list {
+            list-style: none;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .source-list li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .source-list li::before {
+            content: "•";
+            color: var(--secondary-color);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .highlight {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+            border-top: 1px solid var(--glass-border);
+            font-size: 0.9em;
+            color: var(--text-muted);
+            background: rgba(15, 23, 42, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <button class="nav-btn" onclick="showTab('home')">Home</button>
+
+        <div class="dropdown">
+            <button class="nav-btn">Literature ▼</button>
+            <div class="dropdown-content">
+                <button onclick="showTab('morte')">Le Morte d'Arthur</button>
+                <button onclick="showTab('once')">The Once and Future King</button>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <button class="nav-btn">Film & Theatre ▼</button>
+            <div class="dropdown-content">
+                <button onclick="showTab('monty')">Monty Python & the Holy Grail</button>
+                <button onclick="showTab('camelot')">Camelot</button>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <button class="nav-btn">Games ▼</button>
+            <div class="dropdown-content">
+                <button onclick="showTab('fate')">Fate/Grand Order</button>
+                <button onclick="showTab('sonic')">Sonic & the Black Knight</button>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <button class="nav-btn">About ▼</button>
+            <div class="dropdown-content">
+                <button onclick="showTab('about')">About the Site</button>
+                <button onclick="showTab('contact')">Contact</button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- HOME -->
+        <section id="home" class="tab-content active glass-card">
+            <h1>Arthurian Tales Through The Years</h1>
+            <p>This site is an exploration into the enduring mythos of King Arthur and the Knights of the Round Table.
+                For centuries, these stories have successfully stuck around, constantly shifting and evolving to reflect
+                the hopes, fears, and cultural anxieties of whoever happens to be telling them.</p>
+            <p>On this site, we're zeroing in on a few iconic examples from three major storytelling mediums:
+                literature, film/theatre, and video games. We'll unpack their core themes, dive into their historical
+                context, and try to figure out what makes these specific adaptations tick.</p>
+        </section>
+
+        <!-- LITERATURE -->
+        <section id="morte" class="tab-content glass-card">
+            <h2>Le Morte d'Arthur (1485)</h2>
+            <p>Sir Thomas Malory's <em>Le Morte d'Arthur</em> acts as essentially the ultimate culmination of medieval
+                Arthurian legend. Malory, a knight who allegedly compiled this massive saga while kicking around in
+                prison, gathered up pre-existing French prose romances and English poetic traditions and wove them into
+                one unified, sweeping epic.</p>
+            <p>The narrative tackles some incredibly heavy themes—chivalry, loyalty, Christian piety, and a looming
+                sense of unavoidable doom. It covers the entire sprawling timeline, seamlessly moving from Arthur's
+                conception and the founding of the Round Table to the agonizing fallout of Lancelot and Guinevere's
+                affair, right up to the catastrophic fall of Camelot at Mordred's hands.</p>
+            <p>A huge part of Malory's towering achievement actually lies in his brilliant tonal shift away from the
+                massive French <em>Lancelot-Grail Cycle</em>. While that older cycle was completely steeped in
+                theological allegories—framing the secular Round Table as fatally flawed and the spiritual Grail quest
+                as the only true path—Malory decidedly brings the mythos down to earth. He secularizes the tragedy.
+                Instead of seeing Camelot's fall as a necessary religious cleansing, he mourns the loss of earthly
+                chivalry and frames the disaster as the genuinely heartbreaking collapse of a profound human
+                brotherhood.</p>
+        </section>
+
+        <section id="once" class="tab-content glass-card">
+            <h2>The Once and Future King (1958)</h2>
+            <p>T.H. White's beloved tetralogy—encompassing <em>The Sword in the Stone</em>, <em>The Queen of Air and
+                    Darkness</em>, <em>The Ill-Made Knight</em>, and <em>The Candle in the Wind</em>—takes Malory's
+                medieval epic and completely reimagines it through a sharp, post-World War II philosophical lens.</p>
+            <p>White introduces us to a brilliantly anachronistic, backwards-living Merlin who basically home-schools a
+                young Arthur ("Wart"). Through a wildly hands-on curriculum of magic and nature, Merlin transforms him
+                into various animals to teach him radical empathy. The broader, more political arc of the series tracks
+                Arthur's desperate intellectual struggle to invent a system of civilized justice—"Right over Might"—that
+                can somehow channel humanity's naturally aggressive instincts into something constructive.</p>
+            <p>But the real tragedy of the book is deeply psychological. Camelot doesn't collapse just because of
+                "fate"; it falls apart because it's structurally impossible to maintain utopian ideals when you factor
+                in messy, volatile human emotions. This human-centric approach is a fascinating departure from older
+                romantic works like Chrétien de Troyes's <em>Knight of the Cart</em>. In Chrétien's telling, Lancelot is
+                the flawless, religiously devoted courtly lover who happily suffers total humiliation for Guinevere's
+                sake. In White's modern novel, however, Lancelot is incredibly neurotic, self-loathing, and agonizingly
+                aware that his affair betrays his best friend, Arthur—effectively turning a medieval romantic ideal into
+                a pretty devastating psychological burden.</p>
+        </section>
+
+        <!-- FILM & THEATRE -->
+        <section id="monty" class="tab-content glass-card">
+            <h2>Monty Python and the Holy Grail (1975)</h2>
+            <p>An absolute masterpiece of absurdist cinema, <em>Monty Python and the Holy Grail</em> hilariously tears
+                apart not just the Arthurian legend itself, but the entire concept of filmmaking and bloated historical
+                epics.</p>
+            <p>Directed by Terry Gilliam and Terry Jones on a microscopic budget that famously forced them to replace
+                horses with the clacking of coconut halves, the movie operates in a state of sustained, glorious
+                ridiculousness. However, underneath the Black Knight and the lethal Rabbit of Caerbannog, the film
+                flexes a surprisingly solid understanding of the actual medieval literature it's parodying. It
+                meticulously roasts the specific, flowery tropes of chivalric romance, divine quests, and the brutally
+                unequal reality of the feudal class system.</p>
+            <p>In a lot of ways, the film actually acts as a comedic inverse to Wolfram von Eschenbach's deeply
+                philosophical romance, <em>Parzival</em>. Where Eschenbach treats the Grail quest as the ultimate,
+                solemn path to spiritual enlightenment and personal growth, Python treats it as a totally absurd,
+                directionless scam. While Eschenbach's earnest knights grow from fools into genuinely wise kings,
+                Python's knights stay stubbornly bumbling, arrogant, and violently inept from beginning to end, entirely
+                missing the point of their own legend.</p>
+        </section>
+
+        <section id="camelot" class="tab-content glass-card">
+            <h2>Camelot (1960 Musical / 1967 Film)</h2>
+            <p>Adapting T.H. White's novel into a sweeping Broadway sensation, Alan Jay Lerner and Frederick Loewe's
+                <em>Camelot</em> put the legend to music in a way that came to powerfully define an era of American
+                culture.
+            </p>
+            <p>The musical significantly scales back the massive, continent-spanning narrative to place an overwhelming,
+                laser-tight focus on the iconic love triangle between King Arthur, Queen Guinevere, and Sir Lancelot.
+                The thematic core leans heavily heavily on Arthur's profound optimism; he builds the Round Table to
+                establish shiny new ideals of civilized justice, only to watch his dream painfully crumble precisely
+                because to his loyalty to the two people who ultimately betray him.</p>
+            <p>This intense, singular focus on a kingdom-destroying love triangle actually beautifully mirrors the
+                ancient legend of <em>Tristan</em>. Just
+                as the magical, uncontrollable passion between Tristan and Iseult superseded all feudal loyalty to King
+                Mark—ultimately bringing ruin upon the court—<em>Camelot</em> distills the entire sprawling epic of the
+                Round Table into the unavoidable tragedy of one fierce, loyal, yet inherently destructive entanglement.
+            </p>
+        </section>
+
+        <!-- GAMES -->
+        <section id="fate" class="tab-content glass-card">
+            <h2>Fate/Grand Order (2015)</h2>
+            <p>The massive <em>Fate</em> franchise, created by writer Kinoko Nasu, famously flipped the script by
+                reimagining King Arthur as a woman—Artoria Pendragon—who hid her true gender to rule Britain. In the
+                wildly popular gacha RPG <em>Fate/Grand Order</em>, that exploration of Arthurian lore gets blown out
+                into a sprawling, multiversal narrative.</p>
+            <p>The game explores numerous, wild variations of Artoria (including corrupted "Alter" versions, and
+                mind-bending alternate timelines where she wields the holy lance Rhongomyniad instead of Excalibur),
+                alongside heavily anime-stylized interpretations of all the classic Knights of the Round Table.</p>
+            <p>This maximalist, intensely magical approach to Arthuriana—where kings can swing divine lances and heroes
+                undergo radical, monstrous transformations—actually has surprisingly direct roots in early Breton lays
+                like the <em>Lay of Melion</em>. Just as that 12th-century poem threw a knight of King Arthur's court
+                into a wild, magical narrative where a magic ring forcibly transforms him into a wolf (and his wife
+                betrays him),
+                <em>Fate/Grand Order</em> leans entirely into the bizarre, high-fantasy potential of the mythos. It
+                ignores
+                the grounded, chivalric politics of later romances to revel in a world where Arthurian figures are
+                cursed,
+                shape-shifted, and deployed as epic, supernatural icons.
+            </p>
+        </section>
+
+        <section id="sonic" class="tab-content glass-card">
+            <h2>Sonic and the Black Knight (2009)</h2>
+            <p>Throwing Sonic the Hedgehog directly into an illusory recreation of the Arthurian world sounds like a
+                completely absurd pitch, but this Nintendo Wii title actually manages to deliver some incredibly
+                poignant messaging about immortality, mythmaking, and learning how to say goodbye.</p>
+            <p>Sonic is summoned to stop a corrupted version of King Arthur, interacting with characters who act as
+                fantastical analogues for the Knights of the Round Table—all while wielding Caliburn, a sacred talking
+                sword.</p>
+            <p>The game's core thesis really effectively deconstructs the classic Arthurian trope of wanting a
+                "never-ending, perfect kingdom." When the antagonist attempts to make Camelot eternal to prevent its
+                destined, tragic fall, Sonic pushes back, arguing that the value of a kingdom, a story, or a life comes
+                precisely from the fact that it eventually ends. And surprisingly, despite the modern video game
+                trappings, the core structure mirrors the wild, early medieval Welsh tale <em>Culhwch and Olwen</em>. In
+                that story, a hero has to rely on a bizarre, sometimes animalistic ensemble of helpers associated with
+                Arthur to accomplish seemingly impossible tasks. By throwing an anthropomorphic speedster into the court
+                to conquer exaggerated trials alongside mythic knights, the game surprisingly manages to catch the wild,
+                folktale-like energy of the very earliest Arthurian myths.</p>
+        </section>
+
+        <!-- ABOUT SECTIONS -->
+        <section id="about" class="tab-content glass-card">
+            <h2>About the Site</h2>
+            <p>Over the millennia, the figure of King Arthur has been a warlord, a romantic hero, a tragic idealist, a
+                comedic foil, a magical heroine, and everything in between.</p>
+            <p>This site exists to document the incredible elasticity of the Arthurian legend. By maintaining focus on
+                two prime examples from Literature, Film/Theatre, and modern Video Games, we aim to show how each
+                generation looks into the waters of Camelot and sees a reflection of their own world.</p>
+        </section>
+
+        <section id="contact" class="tab-content glass-card">
+            <h2>Contact</h2>
+            <p>For ENGL 300-01 with Professor Seaman.</p>
+            <p>Email: <span class="highlight">hamricknj@g.cofc.edu</span></p>
+        </section>
+    </main>
 
     <footer>
-        <p></p>
+        <p>© 2026 Creative Commons. I think.</p>
     </footer>
+
+    <script>
+        function showTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            const selectedTab = document.getElementById(tabId);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+                window.scrollTo({
+                    top: selectedTab.offsetTop - 100,
+                    behavior: 'smooth'
+                });
+            }
+        }
+    </script>
 </body>
+
 </html>
